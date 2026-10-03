@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Earning App</title>
+</head>
+<body>
+    <h1>Welcome, <%= user.email %></h1>
+    <h3>Balance: ₹<span id="balance"><%= user.balance %></span></h3>
+    
+    <hr>
+    <h3>Captcha Task</h3>
+    <p id="captcha-text">Loading Captcha...</p>
+    <input type="text" id="captcha-input" placeholder="Enter Captcha">
+    <button onclick="verifyCaptcha()">Submit & Earn (Watch Ad)</button>
+
+    <hr>
+    <h3>Spin Wheel</h3>
+    <button onclick="spinWheel()">Spin Now (Watch Ad)</button>
+
+    <br><br>
+    <a href="/logout">Logout</a>
+
+    <script>
+        let currentCaptchaCode = "";
+        function generateCaptcha() {
+            currentCaptchaCode = Math.random().toString(36).substring(2, 8);
+            document.getElementById('captcha-text').innerText = "Solve this: " + currentCaptchaCode;
+        }
+        generateCaptcha();
+
+        function verifyCaptcha() {
+            let val = document.getElementById('captcha-input').value;
+            if(val === currentCaptchaCode) {
+                alert("Simulating Ad View... Ad showing!");
+                fetch('/add-reward', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: 1 })
+                }).then(res => res.json()).then(data => {
+                    if(data.success) {
+                        document.getElementById('balance').innerText = data.newBalance;
+                        alert("Reward added successfully!");
+                        generateCaptcha();
+                        document.getElementById('captcha-input').value = "";
+                    }
+                });
+            } else {
+                alert("Incorrect Captcha!");
+            }
+        }
+
+        function spinWheel() {
+            alert("Simulating Spin Ad...");
+            fetch('/add-reward', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: 2 })
+            }).then(res => res.json()).then(data => {
+                if(data.success) {
+                    document.getElementById('balance').innerText = data.newBalance;
+                    alert("Spin reward added!");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
