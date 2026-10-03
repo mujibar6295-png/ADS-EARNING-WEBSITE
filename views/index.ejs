@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Earning App</title>
+</head>
+<body>
+    <h1>Welcome to Earning App</h1>
+    <% if (user) { %>
+        <p>Hello, <%= user.email %>!</p>
+        <a href="/dashboard"><button>Go to Dashboard</button></a>
+    <% } else { %>
+        <a href="/login"><button>Login</button></a>
+        <a href="/register"><button>Register</button></a>
+    <% } %>
+</body>
+</html>
